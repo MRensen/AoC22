@@ -18,13 +18,13 @@ public class Day03Test {
     @Test
     public void part1() {
         Day<Integer> day = new Day03();
-        assertEquals(Integer.valueOf(2117664), day.part1(input.getLines()));
+        assertEquals(Integer.valueOf(2261546), day.part1(input.getLines()));
     }
 
     @Test
     public void part2() {
         Day<Integer> day = new Day03();
-        assertEquals(Integer.valueOf(2073416724), day.part2(input.getLines()));
+        assertEquals(Integer.valueOf(0), day.part2(input.getLines()));
     }
 
     @Test
@@ -43,6 +43,6 @@ public class Day03Test {
                 "01010"}).toList();
 
         Day<Integer> day = new Day03();
-        assertEquals(Integer.valueOf(2073416724), day.part1(sample));
+        assertEquals(Integer.valueOf(0), day.part1(sample));
     }
 }
