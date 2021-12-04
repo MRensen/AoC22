@@ -6,40 +6,48 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Day04 implements Day<Long> {
-    Board winningboard = null;
-    String winningCall = null;
     @Override
     public Long part1(List<String> input) {
         String[] calls = input.get(0).split(",");
         List<Board> boards = new ArrayList<>();
-        for(int i = 5; i < input.size(); i+=5){
-            //System.out.println(input.get(i));
-           String[][] boardIn = new String[][]{input.get(i).split("\\s+"),
-                                               input.get(i-1).split("\\s+"),
-                                               input.get(i-2).split("\\s+"),
-                                               input.get(i-3).split("\\s+"),
-                                                input.get(i-4).split("\\s+")};
+        for(int i = 6; i < input.size(); i+=5){
+           String[][] boardIn = new String[][]{input.get(i).trim().split("\\s+"),
+                                               input.get(i-1).trim().split("\\s+"),
+                                               input.get(i-2).trim().split("\\s+"),
+                                               input.get(i-3).trim().split("\\s+"),
+                                                input.get(i-4).trim().split("\\s+")};
             boards.add(new Board(boardIn));
+            i++;
         }
-        findWinningBoard(calls, boards);
-
-        Long score = winningboard.getScore(winningCall);
-        System.out.println(score);
-        //System.out.println();
-
-        return score;
-    }
-    public void findWinningBoard(String[] calls, List<Board> boards){
-        for(String i : calls){
-            for(Board board : boards){
-                board.fillCall(i);
-                if(board.hasBingo()){
-                    winningboard = board;
-                    winningCall = i;
-                    return;
+        Board winningBoard = null;
+        String winningCall = null;
+        while(winningBoard == null) {
+            for (String call : calls) {
+                Board temp = findWinningBoard(call, boards);
+                if(temp != null){
+                    winningBoard = temp;
+                    winningCall = call;
+                    break;
                 }
             }
         }
+
+        try {
+            Long score = winningBoard.getScore(winningCall);
+            return score;
+        } catch (NullPointerException e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+    public Board findWinningBoard(String call, List<Board> boards){
+            for(Board board : boards){
+                board.fillCall(call);
+                if(board.hasBingo()){
+                    return board;
+                }
+        }
+            return null;
     }
 
     @Override
@@ -63,7 +71,6 @@ class Board{
                 }
             }
         }
-        System.out.println();
     }
 
     public boolean hasBingo(){
@@ -73,7 +80,6 @@ class Board{
                     row[2].equals("filled") &&
                     row[3].equals("filled") &&
                     row[4].equals("filled")){
-                System.out.println();
                 return true;
             }
         }
@@ -85,12 +91,15 @@ class Board{
         for(String[] row : board){
             for(String str : row){
                 if(!str.equals("filled")) {
-                    sum += Integer.parseInt(str);
+                    try {
+                        sum += Integer.parseInt(str);
+                    } catch (NumberFormatException e){
+                        System.out.println(e.getMessage());
+                    }
                 }
             }
         }
         Long result = Integer.toUnsignedLong(sum * Integer.parseInt(i));
-        System.out.println(result);
         return result;
     }
 }
