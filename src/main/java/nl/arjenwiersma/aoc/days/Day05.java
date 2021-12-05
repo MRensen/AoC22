@@ -10,7 +10,7 @@ public class Day05 implements Day<Integer> {
         //x>y
         int[][] result = new int[(x-y)+1][2];
         for(int i = y; i <= x; i++){
-            //int[x,const] for horizontal
+            //int[const,x] for horizontal
             result[i-y] = new int[]{constant, i};
         }
         return result;
@@ -19,7 +19,7 @@ public class Day05 implements Day<Integer> {
         //x>y
         int[][] result = new int[(x-y)+1][2];
         for(int i = y; i <= x; i++){
-            //int[const,x] for vertical
+            //int[x,const] for vertical
             result[i-y] = new int[]{i, constant};
         }
         return result;
