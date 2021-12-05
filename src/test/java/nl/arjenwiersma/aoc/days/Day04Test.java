@@ -17,7 +17,7 @@ public class Day04Test {
     @Test
     public void part1() {
         Day<Long> day = new Day04();
-        assertEquals(Long.valueOf(45122), day.part1(input.getLines()));
+        assertEquals(Long.valueOf(89001), day.part1(input.getLines()));
     }
 
     @Test

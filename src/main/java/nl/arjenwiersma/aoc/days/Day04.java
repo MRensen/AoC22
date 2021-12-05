@@ -72,14 +72,27 @@ class Board{
             }
         }
     }
+    public boolean checkCollumns(String[][] board){
+        for(int i = 0; i < board.length; i++){
+            if( board[0][i].equals("filled")&&
+                    board[1][i].equals("filled")&&
+                    board[2][i].equals("filled")&&
+                    board[3][i].equals("filled")&&
+                    board[4][i].equals("filled")){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public boolean hasBingo(){
         for(String[] row : board){
-            if(row[0].equals("filled") &&
+            if((row[0].equals("filled") &&
                     row[1].equals("filled") &&
                     row[2].equals("filled") &&
                     row[3].equals("filled") &&
-                    row[4].equals("filled")){
+                    row[4].equals("filled")) ||
+            checkCollumns(board)){
                 return true;
             }
         }
