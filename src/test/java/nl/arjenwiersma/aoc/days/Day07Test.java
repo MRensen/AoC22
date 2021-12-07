@@ -32,6 +32,6 @@ public class Day07Test {
         List<String> sample = Arrays.stream(new String[]{"16,1,2,0,4,2,7,1,2,14"}).toList();
 
         Day<Integer> day = new Day07();
-        assertEquals(Integer.valueOf(37), day.part1(sample));
+        assertEquals(Integer.valueOf(168), day.part2(sample));
     }
 }
