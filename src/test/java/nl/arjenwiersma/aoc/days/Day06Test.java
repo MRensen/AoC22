@@ -23,7 +23,7 @@ public class Day06Test {
     @Test
     public void part2() {
         Day<Long> day = new Day06();
-        assertEquals(Long.valueOf(0), day.part2(input.getLines()));
+        assertEquals(Long.valueOf(1632146183902L), day.part2(input.getLines()));
     }
 
     @Test

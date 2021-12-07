@@ -33,8 +33,33 @@ public class Day06 implements Day<Long> {
        return countFishes(80, input);
     }
 
+
+
     @Override
     public Long part2(List<String> input) {
-        return countFishes(265, input);
+        int[] inputparsed = Arrays.stream(input.get(0).split(",")).mapToInt(Integer::valueOf).toArray();
+        long[] counters = new long[9];
+        for(int fish : inputparsed){
+            counters[fish]++;
+        }
+        for(int day = 1; day <= 256; day++){
+            long makeSixsAndEights = 0;
+            for(int index = 0; index < 9; index++){
+                switch(index){
+                    case 0:
+                        makeSixsAndEights = counters[index];
+                        break;
+                    default:
+                        counters[index-1] = counters[index];
+                }
+            }
+            counters[6] += makeSixsAndEights;
+            counters[8] = makeSixsAndEights;
+            }
+        long sum = 0l;
+        for(long i : counters){
+            sum += i;
+        }
+        return sum; //countFishes(265, input);
     }
 }
