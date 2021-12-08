@@ -28,7 +28,14 @@ public class Day07 implements Day<Integer> {
         int sum = 0;
         for(int i: diffs){
             //S = n/2[2a + (n − 1) × d]
-            sum += (i/2*(2+(i-1)));
+
+            int calc = (i/2*(2+(i)));
+            System.out.println(i + " -> " +calc);
+            if(i == 1){
+                sum+= 1;
+            } else {
+                sum += calc;
+            }
         }
         return sum;
     }
@@ -57,7 +64,7 @@ public class Day07 implements Day<Integer> {
             parsedInput.add(Integer.valueOf(str));
         }
         int highest = -1;
-        for(int i = 0; i<2000; i++){
+        for(int i = 0; i< parsedInput.size(); i++){
             int current = calcy(i, parsedInput);
             if(current < highest || highest == -1){
                 highest = current;
