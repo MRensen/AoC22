@@ -1,5 +1,7 @@
 package nl.arjenwiersma.aoc.days;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import nl.arjenwiersma.aoc.common.Day;
@@ -8,65 +10,83 @@ public class Day01 implements Day<Integer> {
 
     @Override
     public Integer part1(List<String> input) {
-        int previous = 0;
-        int bigger = 0;
-        int smaller = 0;
-        for(String i : input){
-            int current = Integer.parseInt(i);
-            if(previous > 0){
-                if(current > previous){
-                    bigger++;
-                } else {
-                    smaller++;
-                }
+        List<Elf> elves = new ArrayList<>();
+        List<String> toElf = new ArrayList<>();
+        Elf winner = new Elf();
+        for(String c : input){
+            if(!c.isEmpty()){
+                toElf.add(c);
+            } else {
+                elves.add(new Elf(toElf));
+                toElf = new ArrayList<>();
             }
-            previous = current;
         }
-        return bigger;
+        for(Elf elf : elves){
+            if(elf.getTotalCalories() > winner.getTotalCalories()){
+                winner = elf;
+            }
+        }
+        return winner.getTotalCalories();
+
+    }
+    private class Elf{
+        final List<String> calories;
+        public Elf(List<String> calories){
+            this.calories = calories;
+        }
+        public Elf(){
+            this.calories = List.of("0");
+        }
+
+        public int getTotalCalories(){
+            int total = 0;
+            for(String c : calories){
+                total += Integer.parseInt(c);
+            }
+            return total;
+        }
+
+        @Override
+        public String toString() {
+            return Integer.toString(getTotalCalories());
+        }
     }
 
     @Override
     public Integer part2(List<String> input) {
-        int bigger = 0;
-        int clock = 0;
-        int a = 0;
-        int b = 0;
-        int c = 0;
-        int previousSum = 0;
-        for(String i : input){
-            int current = Integer.parseInt(i);
-            int currentSum = 0;
-            if(a+b+c == 0){
-                a = current;
-            } else if(b+c == 0){
-                b = current;
-            } else if(c == 0){
-                c = current;
-                currentSum = a+b+c;
-                previousSum = currentSum;
+//        input = Arrays.asList("1000", "2000", "3000", "" , "4000","","5000","6000","","7000","8000","9000","","10000");
+        List<Elf> elves = new ArrayList<>();
+        List<String> toElf = new ArrayList<>();
+        Elf winner = new Elf();
+        Elf second = new Elf();
+        Elf third = new Elf();
+        for(String c : input){
+            if(!c.isEmpty()){
+                toElf.add(c);
             } else {
-                switch(clock){
-                    case 0:
-                        clock = 1;
-                        a = current;
-                        break;
-                    case 1:
-                        clock = 2;
-                        b = current;
-                        break;
-                    case 2:
-                        clock = 0;
-                        c = current;
-                        break;
-                }
-                currentSum = a+b+c;
-                if(currentSum > previousSum){
-                    bigger++;
-                }
-                previousSum = currentSum;
+                elves.add(new Elf(toElf));
+                toElf = new ArrayList<>();
             }
         }
-        return bigger;
+        if(!elves.isEmpty()) {
+            elves.add(new Elf(toElf));
+        }
+        for(Elf elf : elves){
+            if(elf.getTotalCalories() > winner.getTotalCalories()){
+                third = second;
+                second = winner;
+                winner = elf;
+            } else if(elf.getTotalCalories() > second.getTotalCalories()){
+                third = second;
+                second = elf;
+            }else if(elf.getTotalCalories() > third.getTotalCalories()){
+                third = elf;
+            }
+
+        }
+        System.out.println(winner + " + " + second +" + "+ third);
+        return winner.getTotalCalories() + second.getTotalCalories() + third.getTotalCalories();
+
     }
     
 }
