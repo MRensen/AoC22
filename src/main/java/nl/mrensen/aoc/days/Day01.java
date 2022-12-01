@@ -1,10 +1,9 @@
-package nl.arjenwiersma.aoc.days;
+package nl.mrensen.aoc.days;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import nl.arjenwiersma.aoc.common.Day;
+import nl.mrensen.aoc.common.Day;
 
 public class Day01 implements Day<Integer> {
 

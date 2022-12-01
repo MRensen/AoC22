@@ -1,4 +1,4 @@
-package nl.arjenwiersma.aoc.days;
+package nl.mrensen.aoc.days;
 
 
 import static org.junit.Assert.assertEquals;
@@ -6,8 +6,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Rule;
 import org.junit.Test;
 
-import nl.arjenwiersma.aoc.common.Day;
-import nl.arjenwiersma.aoc.common.DayInputExternalResource;
+import nl.mrensen.aoc.common.Day;
+import nl.mrensen.aoc.common.DayInputExternalResource;
 
 public class Day01Test {
     @Rule

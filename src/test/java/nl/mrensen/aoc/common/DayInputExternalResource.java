@@ -1,4 +1,4 @@
-package nl.arjenwiersma.aoc.common;
+package nl.mrensen.aoc.common;
 
 import java.io.BufferedReader;
 import java.io.IOException;
