@@ -14,44 +14,6 @@ public class Day11 implements Day<Integer> {
 
     List<Monkey> monkeys = new ArrayList<>();
 
-    private class Item{
-        private long number;
-        private long power;
-        private long remainder;
-
-        public Item(long number, long power, long remainder) {
-            this.number = number;
-            this.power = power;
-            this.remainder = remainder;
-        }
-
-        public long getNumber() {
-            return number;
-        }
-
-        public void setNumber(long number) {
-            this.number = number;
-        }
-
-        public long getPower() {
-            return power;
-        }
-
-        public void setPower(long power) {
-            this.power = power;
-        }
-
-        public long getRemainder() {
-            return remainder;
-        }
-
-        public void setRemainder(long remainder) {
-            this.remainder = remainder;
-        }
-        public boolean divisible(int divide){
-            return ((Math.pow(number, power))+remainder) % divide == 0;
-        }
-    }
     private class Monkey{
         int inspections = 0;
         List<Long> items;
