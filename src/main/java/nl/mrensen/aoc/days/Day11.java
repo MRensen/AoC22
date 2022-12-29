@@ -10,14 +10,54 @@ import java.util.stream.Stream;
 
 public class Day11 implements Day<Integer> {
 
+    int modulo = 1;
+
     List<Monkey> monkeys = new ArrayList<>();
 
+    private class Item{
+        private long number;
+        private long power;
+        private long remainder;
+
+        public Item(long number, long power, long remainder) {
+            this.number = number;
+            this.power = power;
+            this.remainder = remainder;
+        }
+
+        public long getNumber() {
+            return number;
+        }
+
+        public void setNumber(long number) {
+            this.number = number;
+        }
+
+        public long getPower() {
+            return power;
+        }
+
+        public void setPower(long power) {
+            this.power = power;
+        }
+
+        public long getRemainder() {
+            return remainder;
+        }
+
+        public void setRemainder(long remainder) {
+            this.remainder = remainder;
+        }
+        public boolean divisible(int divide){
+            return ((Math.pow(number, power))+remainder) % divide == 0;
+        }
+    }
     private class Monkey{
         int inspections = 0;
-        List<Integer> items;
+        List<Long> items;
         int id, divisible, correct, incorrect, operation;
         String operator;
-        public Monkey(int id, List<Integer> items, String operation, int divisible, int correct, int incorrect){
+        public Monkey(int id, List<Long> items, String operation, int divisible, int correct, int incorrect){
             this.id = id;
             this.items = items;
             this.divisible = divisible;
@@ -34,7 +74,7 @@ public class Day11 implements Day<Integer> {
                 operator = "^";
             }
         }
-        public void addItem(int item){
+        public void addItem(Long item){
             items.add(item);
         }
 
@@ -43,10 +83,11 @@ public class Day11 implements Day<Integer> {
             if(items.isEmpty()){
 //                System.out.println("no items");
             } else {
-                for (int item : items) {
+                for (Long item : items) {
                     inspections++;
                     item = itemOperation(item);
-                    item = item / 3;
+//                    item = item / 3;
+                    item = item % modulo;
                     if (item % divisible == 0) {
                         monkeys.get(correct).addItem(item);
                     } else {
@@ -57,7 +98,7 @@ public class Day11 implements Day<Integer> {
             }
         }
 
-        private int itemOperation(int item){
+        private Long itemOperation(Long item){
             switch (operator){
                 case "^" -> {return item * item;}
                 case "+" -> {
@@ -78,10 +119,11 @@ public class Day11 implements Day<Integer> {
         for(int i = 0; i < input.size(); i+=7){
             List<String> rawMonkey = input.subList(i,i+6);
             var itemcheck = rawMonkey.get(1).substring(18).split(", ");
-            List<Integer> items = Stream.of(rawMonkey.get(1).substring(18).split(", "))
-                    .map(Integer::valueOf).collect(Collectors.toList());
+            List<Long> items = Stream.of(rawMonkey.get(1).substring(18).split(", "))
+                    .map( Long::valueOf).collect(Collectors.toList());
             String operation = rawMonkey.get(2).substring(23);
             int divisible = Integer.parseInt(rawMonkey.get(3).substring(21));
+            modulo *= divisible;
             int correct = Integer.parseInt(rawMonkey.get(4).substring(29));
             int incorrect = Integer.parseInt(rawMonkey.get(5).substring(30));
             Monkey monkey = new Monkey(monkeyNumber, items, operation, divisible, correct, incorrect);
@@ -114,6 +156,13 @@ public class Day11 implements Day<Integer> {
 
     @Override
     public Integer part2(List<String> input) {
+        parseInput(input);
+        for(int i = 0; i < 10000; i++) {
+            for (Monkey m : monkeys) {
+                m.inspect();
+            }
+        }
+        printAllItems();
         return null;
     }
 }
