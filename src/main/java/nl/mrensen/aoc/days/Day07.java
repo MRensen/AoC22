@@ -17,27 +17,35 @@ public class Day07 implements Day<Integer> {
     private void parseCom(String input){
         String command = input.substring(2,4).trim();
         String rest = input.substring(4).trim();
-//        System.out.println(rest);
+
+        // "CD /" -> Zet de "home" dir als de huidige dir.
         if(command.equals("cd") && rest.equals("/")){
             if(home == null){
                 // Set home
                 home = new Dir("null", null, new ArrayList<>(), new ArrayList<>());
             }
             current = home;
-        } else if(command.equals("cd") && rest.equals("..")) {
+        }
+
+        // "CD .." -> De parent van de huidige dir wordt de huidige dir
+        else if(command.equals("cd") && rest.equals("..")) {
             if(current!= home) {
                 current = current.parent;
             } else {
                 System.out.println("current is home: " + current);
             }
-        } else if(command.equals("cd")){
+        }
+        // "CD [naam van dir]" -> De child dir met de jusite naam, wordt de huidige dir.
+        else if(command.equals("cd")){
             Dir moveTo = null;
+            // Door zoek de namen van de childrenDirs en ga naar de childDir die overeen komt met de naam in het CD command
             for(Dir d : current.children){
                 if(d.name.equals(rest)){
                     moveTo = d;
                 }
             }
             if(moveTo == null){
+                // Hier zou je niet moeten kunnen komen
                 throw new RuntimeException("Dir does not exist as co-sibling of parent: " + input);
             }
             current = moveTo;
@@ -47,7 +55,6 @@ public class Day07 implements Day<Integer> {
     }
 
     private void parseDir(String input){
-//        System.out.println(input);
         String[] split = input.split(" ");
         String name = split[1];
         createDir(name);
@@ -55,7 +62,7 @@ public class Day07 implements Day<Integer> {
 
     private void createDir(String name) {
         // check of de parent als een dir heeft met deze naam
-        if(!ListContainsNameDir(current.children, name)){
+        if(current.children.stream().noneMatch((e)->name.equals(e.getName()))){
             //zo niet, maak dan deze dir aan en voeg het toe aan de children lijst van de parent.
             Dir d = new Dir(name, current, new ArrayList<>(), new ArrayList<>());
             current.children.add(d);
@@ -63,16 +70,6 @@ public class Day07 implements Day<Integer> {
             // Als het goed is kun je hier niet komen, want een LS laat alle dirs van een parent zien, geen dubbele
             System.out.println("Dir already crated (should not be possible) -> line:" + lineCounter);
         }
-    }
-
-    private boolean ListContainsNameDir(List<Dir> list, String name) {
-        // returned true als de dir-naam in de lijst staat.
-        for (Dir d : list){
-            if(d.name.equals(name)){
-                return true;
-            }
-        }
-        return false;
     }
 
     private void parseFile(String input){
@@ -93,10 +90,6 @@ public class Day07 implements Day<Integer> {
             // voor elke child-dir, roep deze methode opnieuw aan.
             // Returned pas tot het bij een childmap zonder eigen children komt.
             size += getDirSize(d);
-
-//            // Op dit punt is de recursie klaar voor alle children
-//            // voeg daar nog de filesizes aan toe van deze child-dir
-//            size += getFilesSize(d.files);
         }
         // voeg de filesizes toe aan de totale size van deze dir
         size += dir.files.stream().mapToInt(e->e.size).sum();
@@ -113,25 +106,6 @@ public class Day07 implements Day<Integer> {
 
         // return de size (dit is ook belangrijk voor de recursie.)
         return size;
-    }
-
-
-    private Integer totalsFromGoodDirs() {
-        // tel alle sizes van de goede dirs (size onder 100000) bij elkaar op;
-        Integer total = 0;
-        for(Integer i : goodDirs.values()){
-            total += i;
-        }
-        return total;
-    }
-
-    private String printDirs(Dir dir, int counter){
-        StringBuilder sb = new StringBuilder();
-        sb.append("Dir: " + dir.name + " ("+ counter +")" + "\n");
-        for(Dir d: dir.children){
-            sb.append(printDirs(d, counter++));
-        }
-        return sb.toString();
     }
 
     int lineCounter = 0;
@@ -187,22 +161,22 @@ public class Day07 implements Day<Integer> {
         // Een lijst met alle sizes van alle dirs (we hebben de namen van dedirs niet nodig)
         ArrayList<Integer> allDirSizes = new ArrayList<>(allDirs.values());
 
+        // sorteer de sizes van laag naar hoog
         Collections.sort(allDirSizes);
 
-//        while (currentUsedDiscSize > NEEDEDDISCSPACE){
             for(int i : allDirSizes){
                 int freeSpace = TOTALDISCSPACE - currentUsedDiscSize + i;
                 if (freeSpace >= NEEDEDDISCSPACE){
+
+                    // Return de eerste size die voldoende ruimte maakt
                     return i;
                 }
             }
-//        }
 
+            // Als er geen resultaat gevonden wordt, return je null. De test faalt dan.
         return null;
     }
 
-//    record Dir(String name, Dir parent, List<Dir> children, List<File> files){};
-//    record File(Dir container, int size, String name){};
     private class File{
         Dir container;
         int size;
@@ -247,6 +221,10 @@ public class Day07 implements Day<Integer> {
             this.parent = parent;
             this.children = children;
             this.files = files;
+        }
+
+        public String getName() {
+            return name;
         }
 
         @Override
