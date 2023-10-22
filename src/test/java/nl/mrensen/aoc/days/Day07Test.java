@@ -14,12 +14,12 @@ public class Day07Test {
     @Test
     public void part1() {
         Day<Integer> day = new Day07();
-        assertEquals(Integer.valueOf(95437), day.part1(input.getLines()));
+        assertEquals(Integer.valueOf(1449447), day.part1(input.getLines()));
     }
 
     @Test
     public void part2() {
         Day<Integer> day = new Day07();
-        assertEquals(Integer.valueOf(70), day.part2(input.getLines()));
+        assertEquals(Integer.valueOf(8679207), day.part2(input.getLines()));
     }
 }
