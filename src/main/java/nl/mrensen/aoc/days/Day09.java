@@ -34,7 +34,7 @@ public class Day09  implements Day<Integer> {
    int count = 1;
    Set<Pos> visited = new HashSet<>();
 
-   private void move(String move){
+   private void move(String move, Pos head, Pos tail, boolean set){
        String dir = move.substring(0,1);
        String steps = move.substring(1).trim();
        switch(dir){
@@ -42,92 +42,94 @@ public class Day09  implements Day<Integer> {
            case "R" -> {
                // Voor elke stap die de H zet, volgt de T
                for(int i = 0; i < Integer.parseInt(steps); i++){
-                   h.x++;
-                   moveT();
+                   head.x++;
+                   moveT(head, tail, set);
                }
            }
            case "L" -> {
                for(int i = 0; i < Integer.parseInt(steps); i++){
-                   h.x--;
-                   moveT();
+                   head.x--;
+                   moveT(head, tail, set);
                }
            }
            case "U" -> {
                for(int i = 0; i < Integer.parseInt(steps); i++){
-                   h.y++;
-                   moveT();
+                   head.y++;
+                   moveT(head,tail, set);
                }
            }
            case "D" -> {
                for(int i = 0; i < Integer.parseInt(steps); i++){
-                   h.y--;
-                   moveT();
+                   head.y--;
+                   moveT(head, tail, set);
                }
            }
        }
    }
 
-   private boolean visitedAdd(Pos pos){
-       Pos toAdd = new Pos(t.x, t.y);
-       return visited.add(toAdd);
+   private boolean visitedAdd(Pos pos, Boolean set){
+       Pos toAdd = new Pos(pos.x, pos.y);
+       
+       // Voeg alleen toAdd toe aan visited als set true is.
+       return set && visited.add(toAdd);
    };
 
-    private void moveT() {
+    private void moveT(Pos head, Pos tail, boolean set) {
        // Als H naar rechts is verplaatst en T en H elkaar niet meer aanraken
-        if(t.x<h.x-1){
+        if(tail.x<head.x-1){
             // verplaats T dan ook naar rechts, zodat T en H elakar weer aanraken.
-            t.x++;
+            tail.x++;
             // Als H dan ook nog hoger staat dan T, verplaats T dan schuin omhoog ipv enkel naar rechts.
-            if(t.y<h.y){
-                t.y++;
+            if(tail.y<head.y){
+                tail.y++;
             }
             // Als H ook lager staat dan T, verplaats T dan schuin naar onder ipv enkel naar rechts.
-            else if(t.y>h.y){
-                t.y--;
+            else if(tail.y>head.y){
+                tail.y--;
             }
-            if(visitedAdd(t)){
+            if(visitedAdd(tail, set)){
                 count++;
             }
         }
 
         // Als H naar links is verplaatst en T en H elkaar niet meer aanraken
-        else if(t.x>h.x+1){
-            t.x--;
-            if(t.y>h.y){
-                t.y--;
+        else if(tail.x>head.x+1){
+            tail.x--;
+            if(tail.y>head.y){
+                tail.y--;
             }
-            else if(t.y<h.y){
-                t.y++;
+            else if(tail.y<head.y){
+                tail.y++;
             }
-            if(visitedAdd(t)){
+            if(visitedAdd(tail, set)){
                 count++;
             }
         }
 
         // Als H omhoog is verplaats en T en H elkaar niet meer aanraken
-        else if(t.y<h.y-1){
-            t.y++;
-            if(t.x<h.x){
-                t.x++;
+        else if(tail.y<head.y-1){
+            tail.y++;
+            if(tail.x<head.x){
+                tail.x++;
             }
-            else if(t.x>h.x){
-                t.x--;
+            else if(tail.x>head.x){
+                tail.x--;
             }
-            if(visitedAdd(t)){
+            if(visitedAdd(tail, set)){
                 count++;
             }
         }
 
         // Als H omlaag is verplaatst en T en H elkaar niet meer aanraken
-        else if(t.y>h.y+1){
-            t.y--;
-            if(t.x>h.x){
-                t.x++; //Note: Ik had hier ++ en hieronder --, waardoor mijn antwoord 6077 was ipv 5874
+        else if(tail.y>head.y+1){
+            tail.y--;
+            if(tail.x>head.x){
+                tail.x--; //Note: Ik had hier ++ en hieronder --, waardoor mijn antwoord 6077 was ipv 5874
             }
-            else if(t.x<h.x){
-                t.x--;
+            else if(tail.x<head.x){
+                tail.x++;
             }
-            if(visitedAdd(t)){
+            if(visitedAdd(tail, set)){
                 count++;
             }
         }
@@ -139,12 +141,12 @@ public class Day09  implements Day<Integer> {
     @Override
     public Integer part1(List<String> input) {
         // voeg de start positie van T toe aan de set.
-        visitedAdd(t);
+        visitedAdd(t ,true);
 
         // loop door de input heen en voer elke regel uit.
         for(String s : input){
-            inputRow++;
-            move(s);
+            inputRow++; // deze is handig voor debuggen
+            move(s, h, t, true);
         }
 
         // return hoeveel unieke posities T heeft bezocht
@@ -153,6 +155,32 @@ public class Day09  implements Day<Integer> {
 
     @Override
     public Integer part2(List<String> input) {
-        return null;
+        // voeg de start positie van T toe aan de set.
+        visitedAdd(t, true);
+        
+        Pos[] tails = new Pos[8];
+        for(int i = 0; i<tails.length; i++){
+            tails[i] = new Pos(0, 0);
+        }
+
+        // loop door de input heen en voer elke regel uit voor alle knopen
+        for(String s : input){
+            String steps = s.substring(1).trim();
+            inputRow++;
+            move(s, h, tails[0], false);
+            for(int i = 0; i < Integer.parseInt(steps); i++) {
+                moveT(tails[0], tails[1], false);
+                moveT(tails[1], tails[2], false);
+                moveT(tails[2], tails[3], false);
+                moveT(tails[3], tails[4], false);
+                moveT(tails[4], tails[5], false);
+                moveT(tails[5], tails[6], false);
+                moveT(tails[6], tails[7], false);
+                moveT(tails[7], t, true);
+            }
+        }
+
+        // return hoeveel unieke posities T heeft bezocht
+        return visited.size();
     }
 }
