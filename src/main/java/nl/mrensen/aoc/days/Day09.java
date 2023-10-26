@@ -77,7 +77,7 @@ public class Day09  implements Day<Integer> {
     private void moveT(Pos head, Pos tail, boolean set) {
        // Als H naar rechts is verplaatst en T en H elkaar niet meer aanraken
         if(tail.x<head.x-1){
-            // verplaats T dan ook naar rechts, zodat T en H elakar weer aanraken.
+            // verplaats T dan ook naar rechts, zodat T en H elkaar weer aanraken.
             tail.x++;
             // Als H dan ook nog hoger staat dan T, verplaats T dan schuin omhoog ipv enkel naar rechts.
             if(tail.y<head.y){
